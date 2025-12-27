@@ -5,7 +5,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "pic.jpg", "spectrum.png", "play-music.png"],
   "exclude": ["node_modules"]
 }
 
