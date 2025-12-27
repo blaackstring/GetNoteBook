@@ -36,7 +36,7 @@ export const S3fileUpload=async(payload,url)=>{
 export const pdfUploadForEmbeddings=async(url)=>{
   try {
     console.log('uploading for embeddings', url)
-    const res=await axios.post(`/api/v1/upload_pdf`, {url}, {  
+    const res=await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/upload_pdf`, {url}, {  
       headers:{
             "Content-Type":"application/json"
         }

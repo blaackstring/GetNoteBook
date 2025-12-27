@@ -4,7 +4,7 @@ export const FetchTranscript = async (transcriptId) => {
   try {
     console.log("Transcript ID:", transcriptId);
 
-    const res = await axios.get(  `/api/v1/fetch_youtube_script/${transcriptId}`);
+    const res = await axios.get(  `${import.meta.env.VITE_BACKEND_URL}/api/v1/fetch_youtube_script/${transcriptId}`);
     const data = res.data; 
     console.log(data);
     return data;

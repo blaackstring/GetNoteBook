@@ -18,20 +18,20 @@ export const useRagQuery = () => {
   const startStreaming = useCallback((jobId) => {
     if (eventSourceRef.current) return;
 
-    const es = new EventSource(`/api/v1/rag_query/stream/${jobId}/${uuid()}`);
+    const es = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/api/v1/rag_query/stream/${jobId}/${uuid()}`);
     eventSourceRef.current = es;
     setIsStreaming(true);
-    
+
     let typingQueue = [];
     let isTyping = false;
 
-    
+
     setAllanswers(prev => [...prev, { Ai: "" }]);
 
     es.onmessage = (e) => {
-      
+
       const newPart = normalizeStreamText(e.data);
-     console.log(e.data)
+      console.log(e.data)
       for (const char of newPart) {
         typingQueue.push(char);
       }
@@ -51,45 +51,45 @@ export const useRagQuery = () => {
         } else {
           const nextChar = typingQueue.shift();
           console.log(nextChar);
-        
-     setAllanswers(prev => {
-  const updated = [...prev];
-  for (let i = updated.length - 1; i >= 0; i--) {
-    if (updated[i].Ai !== undefined) {
-      updated[i] = {
-        ...updated[i],
-        Ai: updated[i].Ai + nextChar
-      };
-      break;
-    }
-  }
 
-  return updated;
-});
+          setAllanswers(prev => {
+            const updated = [...prev];
+            for (let i = updated.length - 1; i >= 0; i--) {
+              if (updated[i].Ai !== undefined) {
+                updated[i] = {
+                  ...updated[i],
+                  Ai: updated[i].Ai + nextChar
+                };
+                break;
+              }
+            }
+
+            return updated;
+          });
 
         }
-      }, 10); 
+      }, 10);
     }
 
     es.addEventListener("end", cleanup);
     es.onerror = cleanup;
   }, [cleanup, setAllanswers]);
 
-    function normalizeStreamText(text) {
-      return text
-        .replace(/Document\s*\d+\s*:/gi, "")
+  function normalizeStreamText(text) {
+    return text
+      .replace(/Document\s*\d+\s*:/gi, "")
 
-    .replace(/Document\s*\d+\s*Document\s*\d+/gi, "")
-        .replace(/\*\s*/g, "• ")
-        .replace(/\n{3,}/g, "\n\n")
-        .replace(/\s{2,}/g, " ")
-        .replace(/•\s*\n/g, "• ")
-        .trim();
-    }
+      .replace(/Document\s*\d+\s*Document\s*\d+/gi, "")
+      .replace(/\*\s*/g, "• ")
+      .replace(/\n{3,}/g, "\n\n")
+      .replace(/\s{2,}/g, " ")
+      .replace(/•\s*\n/g, "• ")
+      .trim();
+  }
 
   const startRagQuery = async (query) => {
     try {
-      const res = await axios.post("/api/v1/rag_query/start", { query }, {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/rag_query/start`, { query }, {
         headers: { "Content-Type": "application/json" }
       });
 
