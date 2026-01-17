@@ -58,7 +58,7 @@ const Messages = memo(({ Allanswers = [] }) => {
                   className="
                       max-w-[70%]
                       bg-[#1A1D22]
-                      text-white/60
+                      text-gray-200
                       px-4
                       py-2
                       rounded-2xl

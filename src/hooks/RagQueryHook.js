@@ -87,6 +87,7 @@ export const useRagQuery = () => {
 
   const startRagQuery = async (query) => {
     try {
+      setAllanswers(prev => [...prev, { human: query, id: uuid() }]);
       setIsStreaming(true); // Set loading immediately
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/rag_query/start`, { query }, {
         headers: { "Content-Type": "application/json" }
