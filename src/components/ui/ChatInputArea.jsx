@@ -35,7 +35,7 @@ export default function ChatInput({ sources }) {
   const watchedMessage = form.watch("message");
 
   // Sync with context iof needed, but primarily for initial load/persistence
-  useEffect(() => {b 
+  useEffect(() => {
     setMessage(watchedMessage);
   }, [watchedMessage, setMessage]);
 
