@@ -8,7 +8,7 @@ import {
   FormField,
   FormItem,
 } from "./form";
-import Input from "./input";
+import Input from "./InputField";
 import { useMessageMutation } from "@/hooks/mutation.js";
 import { UseMsg } from "@/context/MessageContext";
 import { useEffect } from "react";
