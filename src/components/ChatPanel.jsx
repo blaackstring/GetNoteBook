@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSources } from "../context/SourceContext";
 import { Userag } from "@/context/RagContext";
 import Messages from "./ui/Message";
-import ChatInput from "./ui/Input";
+import ChatInput from "./ui/ChatInputArea";
 import { useRagQuery } from "@/hooks/RagQueryHook";
 import { pdfUploadForEmbeddings } from "@/hooks/UploadDocsHook";
 import { FetchTranscript } from "@/hooks/FetchTranscriptHook";
@@ -13,7 +13,7 @@ import "./chat.css";
 const STORAGE_KEY = "isUploaded";
 
 function ChatPanel() {
- 
+
   const { sources } = useSources();
 
   const [isUploaded, setIsUploaded] = useState(false);
@@ -37,7 +37,7 @@ function ChatPanel() {
     try {
       if (typeof window === "undefined") return;
       window.localStorage.setItem(key, value);
-    } catch {}
+    } catch { }
   };
 
   const url =
@@ -54,7 +54,7 @@ function ChatPanel() {
       if (safeGet(STORAGE_KEY) === "true") return;
 
       await Promise.all([
-         pdfUploadForEmbeddings(url),
+        pdfUploadForEmbeddings(url),
         FetchTranscript("Ec19ljjvlCI"),
         FetchTranscript("Z_S0VA4jKes"),
       ]);
@@ -98,14 +98,14 @@ function ChatPanel() {
         </button>
       )}
 
-       {isUploaded  && (
+      {isUploaded && (
         <button
-          onClick={()=>{
+          onClick={() => {
 
             window.localStorage.removeItem(STORAGE_KEY)
             window.location.reload();
           }}
-          className="m-2 px-4 py-2 bg-blue-600 rounded text-white"
+          className="m-2 px-4 py-2 text-md font-mono bg-blue-600 rounded text-white"
         >
           Tap if Not Uploaded...only
         </button>
@@ -121,7 +121,7 @@ function ChatPanel() {
             transition={{ duration: 0.4 }}
           >
             <motion.h2
-              className="text-xl font-semibold"
+              className="text-xl font-display font-semibold"
               variants={textReveal}
               initial="hidden"
               animate="visible"

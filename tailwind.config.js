@@ -9,9 +9,6 @@ export default {
     extend: {
       colors: {
         border: "hsl(var(--border))",
-         fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-      },
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -45,11 +42,15 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+      fontFamily: {
+        sans: ["Playfair Display", "serif", "system-ui"],
+        display: ["Playfair Display", "serif"],
       },
+    },
+    borderRadius: {
+      lg: "var(--radius)",
+      md: "calc(var(--radius) - 2px)",
+      sm: "calc(var(--radius) - 4px)",
     },
   },
   plugins: [],

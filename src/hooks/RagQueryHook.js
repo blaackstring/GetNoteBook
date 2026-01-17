@@ -1,26 +1,25 @@
 import { Userag } from "../context/RagContext.jsx";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import axios from "axios";
 import { v4 as uuid } from "uuid";
 
 export const useRagQuery = () => {
   const eventSourceRef = useRef(null);
-  const { setAllanswers, setStreamingMessage } = Userag();
-  const [isStreaming, setIsStreaming] = useState(false);
+  const { setAllanswers, setStreamingMessage, isStreaming, setIsStreaming } = Userag();
 
   const cleanup = useCallback(() => {
     eventSourceRef.current?.close();
     eventSourceRef.current = null;
     setIsStreaming(false);
     setStreamingMessage(null);
-  }, [setStreamingMessage]);
+  }, [setStreamingMessage, setIsStreaming]);
 
   const startStreaming = useCallback((jobId) => {
     if (eventSourceRef.current) return;
 
     const es = new EventSource(`${import.meta.env.VITE_BACKEND_URL}/api/v1/rag_query/stream/${jobId}/${uuid()}`);
     eventSourceRef.current = es;
-    setIsStreaming(true);
+    // setIsStreaming(true); // Already set in startRagQuery, but safe to keep or remove.
 
     let typingQueue = [];
     let isTyping = false;
@@ -73,12 +72,11 @@ export const useRagQuery = () => {
 
     es.addEventListener("end", cleanup);
     es.onerror = cleanup;
-  }, [cleanup, setAllanswers]);
+  }, [cleanup, setAllanswers, setIsStreaming]);
 
   function normalizeStreamText(text) {
     return text
       .replace(/Document\s*\d+\s*:/gi, "")
-
       .replace(/Document\s*\d+\s*Document\s*\d+/gi, "")
       .replace(/\*\s*/g, "• ")
       .replace(/\n{3,}/g, "\n\n")
@@ -89,6 +87,7 @@ export const useRagQuery = () => {
 
   const startRagQuery = async (query) => {
     try {
+      setIsStreaming(true); // Set loading immediately
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/rag_query/start`, { query }, {
         headers: { "Content-Type": "application/json" }
       });
@@ -98,6 +97,7 @@ export const useRagQuery = () => {
       return jobId;
     } catch (error) {
       console.log("Error while starting rag query", error);
+      setIsStreaming(false); // Reset on error
     }
   };
 

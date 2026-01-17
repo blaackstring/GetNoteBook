@@ -1,39 +1,19 @@
-import { motion } from "framer-motion";
-import RagButton from "./RagButton";
-import { UseMsg } from "@/context/MessageContext";
-import { useMessageMutation } from "@/hooks/mutation.js";
+import * as React from "react"
+import { cn } from "@/lib/utils"
 
-export default function ChatInput({
-  sources
-}) {
-  const {Message,setMessage}=UseMsg()
-  const mutate = useMessageMutation();
-  return (
-    <motion.div className="p-4 border-t border-gray-700">
-      <div className="flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-lg px-4 py-3">
+const Input = React.forwardRef(({ className, type, ...props }, ref) => {
+    return (
         <input
-          type="text"
-          value={Message}
-          onChange={(e) => setMessage(e.target.value)}
-          disabled={sources.length === 0}
-          className="flex-1 bg-transparent text-white outline-none"
-          placeholder={
-            sources.length === 0
-              ? "Upload a source"
-              : "Type your message..."
-          }
+            type={type}
+            className={cn(
+                "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                className
+            )}
+            ref={ref}
+            {...props}
         />
-           <motion.span 
-            className="text-xs text-gray-400"
-            key={sources.length}
-            initial={{ scale: 1.2 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            {sources.length} sources
-          </motion.span>
-        <RagButton  mutate={mutate}/>
-      </div>
-    </motion.div>
-  );
-}
+    )
+})
+Input.displayName = "Input"
+
+export { Input }

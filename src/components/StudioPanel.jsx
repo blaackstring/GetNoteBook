@@ -23,7 +23,7 @@ function StudioPanel() {
     try {
       const data = await mutation.mutateAsync();
       console.log(data)
-      setVideoData(data.videoId)  ;
+      setVideoData(data.videoId);
     } catch (err) {
       console.error(err);
     }
@@ -33,9 +33,9 @@ function StudioPanel() {
   const studioOptions = [
     {
       name: 'Audio Overview', icon:
-        <img src=' spectrum.png' height={30} width={30} className='bg-white/40 rounded-full' />
+        <img src=' spectrum.png' height={30} width={30} className=' rounded-full' />
     },
-    { name: 'Video Summary', icon: <img src='play-music.png' height={30} width={30} className='bg-white/40 rounded-full' /> },
+    { name: 'Video Summary', icon: <img src='play-music.png' height={30} width={30} className=' rounded-full' /> },
   ]
 
   // Container animation for staggered children
@@ -70,7 +70,7 @@ function StudioPanel() {
         transition={{ duration: 0.4 }}
       >
         <motion.h2
-          className="text-xl font-semibold"
+          className="text-xl font-display font-semibold"
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, duration: 0.4 }}

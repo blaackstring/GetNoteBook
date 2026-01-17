@@ -1,9 +1,7 @@
 import { Userag } from "@/context/RagContext";
-import { useMessageMutation } from "@/hooks/mutation";
-import { useRagQuery } from "@/hooks/RagQueryHook";
 import { motion } from "framer-motion";
-import { LoaderCircle } from "lucide-react";
 import { useEffect, useRef, memo } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const messageVariants = {
   hidden: {
@@ -30,35 +28,34 @@ const messageVariants = {
   },
 };
 
-const Messages = memo(({ Allanswers = [], streamingMessage }) => {
+const Messages = memo(({ Allanswers = [] }) => {
   const bottomRef = useRef(null);
-  const {isStreaming}=useRagQuery()
-  const mutation=useMessageMutation();
-
+  const { isStreaming } = Userag();
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [isStreaming, Allanswers.length, streamingMessage]);
+  }, [isStreaming, Allanswers.length]);
+
+  const lastMessage = Allanswers.length > 0 ? Allanswers[Allanswers.length - 1] : null;
+  const showSkeleton = isStreaming && (!lastMessage || lastMessage.human || !lastMessage.Ai);
 
   return (
     <div className="w-full flex flex-col gap-2 ">
-   
-        {Allanswers.length > 0 ? (
-          Allanswers.map((answer) => (
-            <div
-              key={answer.id ?? crypto.randomUUID()} // 🔑 stable key
-              variants={messageVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              layout
-              className="w-full p-2 flex flex-col  gap-2"
-            >
-              {/* ---------- Human Message ---------- */}
-              {answer.human && (
-                <div className="flex justify-end mb-1">
-                  <span
-                    className="
+      {Allanswers.length > 0 ? (
+        Allanswers.map((answer) => (
+          <motion.div
+            key={answer.id ?? crypto.randomUUID()}
+            variants={messageVariants}
+            initial="hidden"
+            animate="visible"
+            layout
+            className="w-full p-2 flex flex-col gap-2"
+          >
+            {/* ---------- Human Message ---------- */}
+            {answer.human && (
+              <div className="flex justify-end mb-1">
+                <span
+                  className="
                       max-w-[70%]
                       bg-[#1A1D22]
                       text-white/60
@@ -71,37 +68,34 @@ const Messages = memo(({ Allanswers = [], streamingMessage }) => {
                       whitespace-pre-wrap
                       overflow-hidden
                     "
-                  >
-                    {answer.human}
-                  </span>
-                </div>
-              )}
+                >
+                  {answer.human}
+                </span>
+              </div>
+            )}
 
-              {/* ---------- AI Message ---------- */}
-            
-           {mutation.isPending&&<LoaderCircle/>}
-               {answer.Ai && (
-                <div className="flex justify-start items-start pl-3">
-                  <span
-                    className="
-                    
+            {/* ---------- AI Message ---------- */}
+            {answer.Ai && (
+              <div className="flex justify-start items-start pl-3">
+                <span
+                  className="
                       px-2
                       py-2
                       rounded-2xl
                       rounded-bl-none
                       text-sm
-                
                       text-start
+                      text-white
                     "
-                  >
-                    {answer.Ai}
-                  </span>
-                </div>
-              )}
-             </div>
-           
-          ))
-        ) : (
+                >
+                  {answer.Ai}
+                </span>
+              </div>
+            )}
+          </motion.div>
+        ))
+      ) : (
+        !showSkeleton && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.5 }}
@@ -109,36 +103,19 @@ const Messages = memo(({ Allanswers = [], streamingMessage }) => {
           >
             Chat messages will appear here
           </motion.div>
-        )}
-        {streamingMessage && (
-          <motion.div
-            key="streaming-message"
-            variants={messageVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            layout
-            className="w-full p-2 flex flex-col min-h-[100px] gap-2"
-          >
-            <div className="flex justify-start items-start pl-3">
-              <span
-                className="
-                    
-                      px-2
-                      py-2
-                      rounded-2xl
-                      rounded-bl-none
-                      text-sm
-                
-                      text-start
-                    "
-              >
-                {streamingMessage.Ai}
-              </span>
-            </div>
-          </motion.div>
-        )}
-    
+        )
+      )}
+
+      {showSkeleton && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col space-y-2 pl-5 py-2 w-full max-w-[300px]"
+        >
+          <Skeleton className="h-4 w-3/4 bg-gray-700/50" />
+          <Skeleton className="h-4 w-1/2 bg-gray-700/50" />
+        </motion.div>
+      )}
 
       {/* Scroll anchor */}
       <div ref={bottomRef} />

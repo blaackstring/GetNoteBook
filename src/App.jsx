@@ -5,11 +5,7 @@ import { SourceProvider } from './context/SourceContext'
 import Header from './components/Header'
 import Home from './pages/Home'
 import Page1 from './pages/Page1'
-import {
-  QueryClient,
-  QueryClientProvider,
-
-} from '@tanstack/react-query'
+import Login from './pages/Login'
 import { RagContextProvider } from './context/RagContext'
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
@@ -19,10 +15,7 @@ import { MsgContextProvider } from './context/MessageContext'
 // Component to handle page transitions
 function AnimatedRoutes() {
   const location = useLocation()
-const queryClient = new QueryClient()
   return (
-     
-     <QueryClientProvider client={queryClient}>
     <AnimatePresence mode="wait">
       <motion.div
         key={location.pathname}
@@ -31,37 +24,40 @@ const queryClient = new QueryClient()
         exit={{ opacity: 0, x: -20 }}
         transition={{ duration: 0.3 }}
       >
-    
-      <Routes location={location}>
+        <Routes location={location}>
           <Route path="/" element={<Home />} />
           <Route path="/page1" element={<Page1 />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
-
-        
       </motion.div>
     </AnimatePresence>
-        </QueryClientProvider>
+  )
+}
+
+function Layout() {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
+
+  return (
+    <div className={`max-h-screen ${isLoginPage ? '' : 'bg-[#22262B]'}`}>
+      {!isLoginPage && <Header />}
+      <AnimatedRoutes />
+    </div>
   )
 }
 
 function App() {
   return (
     <MsgContextProvider>
-    <RagContextProvider>
-    <SourceProvider>
-      <Router>
-        <div className="max-h-screen bg-[#22262B]">
-          <Header />
-          <AnimatedRoutes />
-        </div>
-      </Router>
-    </SourceProvider>
-    </RagContextProvider>
-     </MsgContextProvider>
-    
-
+      <RagContextProvider>
+        <SourceProvider>
+          <Router>
+            <Layout />
+          </Router>
+        </SourceProvider>
+      </RagContextProvider>
+    </MsgContextProvider>
   )
 }
 
 export default App
-
