@@ -12,4 +12,4 @@ function Skeleton({
     )
 }
 
-export { Skeleton }//erfrfr
+export { Skeleton };//erfrfr
