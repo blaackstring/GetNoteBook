@@ -11,7 +11,7 @@ export default function RagButton({ mutate }) {
     try {
         if(!Message) return;
         setAllanswers((prev)=>[...prev,{
-            human:Message
+            human:Message//erfrfr
         }]);
         setMessage('');
       const res = await mutate.mutateAsync(Message);

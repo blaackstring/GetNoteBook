@@ -1,14 +1,14 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "./button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "./form";
+import { Input } from "./input";
 import { useMessageMutation } from "@/hooks/mutation.js";
 import { UseMsg } from "@/context/MessageContext";
 import { useEffect } from "react";
@@ -34,7 +34,7 @@ export default function ChatInput({ sources }) {
 
   const watchedMessage = form.watch("message");
 
-  // Sync with context if needed, but primarily for initial load/persistence
+  // Sync with context iof needed, but primarily for initial load/persistence
   useEffect(() => {
     setMessage(watchedMessage);
   }, [watchedMessage, setMessage]);
